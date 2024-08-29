@@ -20,9 +20,14 @@ Route::group(['middleware' => 'auth:api'] ,function(){
     Route::delete('/delete/{id}',[ProductController::class, 'destroy']);
 
 
+    Route::get('/get-products', [ProductController::class, 'getData']);
+
     Route::get('/getbuy/{id}',[BuyController::class,'getBuy']);
 
     Route::post('/buy/{id}',[BuyController::class,'ToggleBuy']);
+
+    Route::get('/getBuyAll',[BuyController::class,'getBuyAll']);
+
 });
 
 Route::group([

@@ -38,6 +38,13 @@ class ProductController extends Controller
             'data' => $product
         ]);
     }
+    public  function getData(){
+        $product = Product::all();
+        return response()->json([
+            'status' => 'success',
+            'data' => $product
+        ]);
+    }
     public function show($id){
         $product = Product::with('user', 'buy')->find($id);
         if (!$product) {

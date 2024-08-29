@@ -9,14 +9,30 @@ use Illuminate\Database\Eloquent\Collection;
 
 class BuyController extends Controller
 {
-    public function getBuy($id)
+    public function getBuyOne($id)
     {
-        $buy = Product::where('id', $id)->with('buy')->get();
+        $buy = BuyModel::where('product_id', $id)->with('user')->get();
         return response()->json([
             'status' => 'success',
             "data" => $buy
         ]);
     }
+    public function getBuyAll()
+    {
+        $user = auth()->user();
+        $purchases = BuyModel::with('product')
+            ->where('user_id', $user->id)
+            ->get();
+        $purchasedProducts = $purchases->filter(function ($buy) {
+            return $buy->product !== null;
+        })->pluck('product');
+
+        return response()->json([
+            'status' => 'success',
+            'products' => $purchasedProducts
+        ]);
+    }
+
     public function ToggleBuy($id)
     {
         $user = auth()->user();
@@ -33,12 +49,18 @@ class BuyController extends Controller
             BuyModel::where('user_id', $user->id)
                 ->where('product_id', $product->id)
                 ->delete();
+            return response()->json([
+                'status' => 'success'
+            ]);
         } else {
-            $product->buy()->create(['user_id' => $user->id]);
+            $buyed = BuyModel::create([
+                'user_id' => $user->id,
+                'product_id' => $product->id
+            ]);
+            return response()->json([
+                'status' => 'success',
+                'data' => $buyed,
+            ]);
         }
-        return response()->json([
-            'status' => 'success',
-            'data' => $product
-        ]);
     }
 }
