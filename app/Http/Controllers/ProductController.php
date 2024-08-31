@@ -21,6 +21,17 @@ class ProductController extends Controller
             'data' => $products
         ], 200);
     }
+
+    public function Owner() {
+        $products = Product::with('user')
+            ->where('user_id', auth()->id())
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'res' => $products
+        ], 200);
+    }
     public function store(Request $request){
         $user = auth()->user();
         $data =$request->all();
@@ -36,7 +47,7 @@ class ProductController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $product
-        ]);
+        ],200);
     }
     public  function getData(){
         $product = Product::all();
@@ -101,7 +112,7 @@ class ProductController extends Controller
             'status' => 'success',
             'message' => 'Product successfully updated',
             'data' => $product
-        ]);
+        ],200);
     }
     public function destroy($id)
     {
@@ -133,5 +144,6 @@ class ProductController extends Controller
             'message' => 'Product successfully deleted'
         ]);
     }
+
 
 }

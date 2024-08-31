@@ -28,6 +28,8 @@ Route::group(['middleware' => 'auth:api'] ,function(){
 
     Route::get('/getBuyAll',[BuyController::class,'getBuyAll']);
 
+    Route::get('/getOwners',[ProductController::class, 'Owner']);
+
 });
 
 Route::group([
